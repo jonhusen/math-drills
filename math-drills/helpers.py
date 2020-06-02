@@ -6,17 +6,25 @@ class Score:
     """Keep score of current session"""
 
     def __init__(self):
-        self.correct = 0
-        self.incorrect = 0
+        self.total_correct = 0
+        self.total_incorrect = 0
+        self.session_correct = 0
+        self.session_incorrect = 0
 
     def add_correct(self):
-        self.correct += 1
+        self.total_correct += 1
+        self.session_correct += 1
 
     def add_incorrect(self):
-        self.incorrect += 1
+        self.total_incorrect += 1
+        self.session_incorrect += 1
 
-    def total(self):
-        return self.correct + self.incorrect
+    def session_reset(self):
+        self.session_correct = 0
+        self.session_incorrect = 0
+
+    def session_total(self):
+        return self.session_correct + self.session_incorrect
 
 
 class TimerError(Exception):
@@ -64,3 +72,40 @@ class Timer:
 
     def now(self):
         return time.perf_counter()
+
+
+def process_response(correct, allowed, response):
+    """Checks a response and determines if it is correct.
+
+    :param correct: The correct answer.
+    :param allowed: List of possible answers.
+    :param response: The answer provided by the player.
+    :return: "correct", "incorrect", or "exit"
+    """
+    try:
+        response = response.casefold()
+    except AttributeError:
+        pass
+
+    if response not in allowed:
+        return "exit"
+
+    elif response == correct:
+        print("Congratulations! Your are correct.\n")
+        return "correct"
+
+    else:
+        print("Incorrect\n")
+        return "incorrect"
+
+
+def str_range(start=None, stop=None):
+    """Takes start and stop values and returns a list of numbers as strings
+
+    :param start: Start value of range. If not given, starts at 0
+    :param stop: Stop value of range.
+    :return: list of numbers as individual strings.
+    """
+    if start is None:
+        start = 0
+    return [str(x) for x in range(start, stop)]
