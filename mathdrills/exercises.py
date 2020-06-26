@@ -37,7 +37,7 @@ def add_integers(list_of_numbers):
     correct = a + b
     sorted_list = sorted(list_of_numbers.copy())
     allowed = list(range(sorted_list.pop() * 2 + 1))
-    response = input(f"{a} + {b} = ?")
+    response = input(f"{a} + {b} = ?\n")
 
     return correct, allowed, response
 
@@ -51,10 +51,10 @@ def subtract_integers(list_of_numbers):
     a, b = random.choices(list_of_numbers, k=2)
     if a < b:
         correct = b - a
-        response = input(f"{b} - {a} = ?")
+        response = input(f"{b} - {a} = ?\n")
     else:
         correct = a - b
-        response = input(f"{a} - {b} = ?")
+        response = input(f"{a} - {b} = ?\n")
 
     allowed = list_of_numbers
 
