@@ -1,5 +1,6 @@
-from .exercises import qty_discrimination, add_integers, subtract_integers
-from .helpers import Timer, Score, str_range, process_response
+#!/usr/bin/env python3
+from mathdrills.exercises import qty_discrimination, add_integers, subtract_integers
+from mathdrills.helpers import Timer, Score, str_range, process_response
 
 t = Timer()
 score = Score()
@@ -7,27 +8,25 @@ score = Score()
 
 class Session:
     def __init__(self):
-        self._exercise = None
-        self._mode = "1"
+        self._exercise = 0
+        self._mode = 0
         self._duration = 60
         self._num_list = list(range(101))
 
         self._exercise_list = [
-            ("x", None),
             ("Which is greater?", "qty_discrimination(self._num_list)"),
             ("Addition", "add_integers(self._num_list)"),
             ("Subtraction", "subtract_integers(self._num_list)")
         ]
 
         self._mode_list = [
-            None,
             "Speed - Timed run of the game",
             "Free Play - Play as long as you want"
         ]
 
     def reset_defaults(self):
-        self._exercise = None
-        self._mode = "1"
+        self._exercise = 0
+        self._mode = 0
         self._duration = 60
         self._num_list = list(range(101))
 
@@ -50,7 +49,7 @@ class Session:
 
         print(print_options(self._mode_list))
         mode = selection(str_range(1, len(self._mode_list)))
-        if mode == "1":
+        if mode == 0:
             self._mode = mode
             print(
                 "How long would you like your run?\n"
@@ -61,7 +60,7 @@ class Session:
                 self._duration = int(seconds)
             except ValueError:
                 return
-        elif mode == "2":
+        elif mode == 1:
             self._mode = mode
         else:
             return
@@ -75,10 +74,10 @@ class Session:
             pass
 
     def play(self):
-        if self._mode == "1":
+        if self._mode == 0:
             while t.timer_set(self._duration):
                 answer = process_response(
-                    exec(self._exercise_list[int(self._exercise)][1]))
+                    exec(self._exercise_list[self._exercise][1]))
                 if answer == "correct":
                     score.add_correct()
                 elif answer == "incorrect":
@@ -86,11 +85,11 @@ class Session:
 
         print(f"You scored {score.exercise_correct} / {score.exercise_total()} correct answers")
 
-        if self._mode == "2":
+        if self._mode == 1:
             t.stopwatch_start()
             while True:
                 answer = process_response(
-                    exec(self._exercise_list[int(self._exercise)][1]))
+                    exec(self._exercise_list[self._exercise][1]))
                 if answer == "correct":
                     score.add_correct()
                 elif answer == "incorrect":
@@ -115,21 +114,21 @@ def selection(list_of_str_numbers):
     """
     retries = 5
     response = input("Enter your choice: ")
+    if response == "":
+        return
     while response not in list_of_str_numbers and retries > 0:
         response = input("Enter your choice: ")
         retries -= 1
     if response not in list_of_str_numbers and retries == 0:
         return "exit"
-    return response
+    return int(response) - 1
 
 
 def print_options(options_list):
     """Prints the enumerated list without the first item so that
     the displayed options start numbering with 1 and the
     selection correspond with the index"""
-    for k, v in enumerate(options_list):
-        if v is None:
-            continue
+    for k, v in enumerate(options_list, start=1):
         print(f"{k}. {v}")
 
 
